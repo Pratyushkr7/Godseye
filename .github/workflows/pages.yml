@@ -27,6 +27,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx vite build --base=/${{ github.event.repository.name }}/
+      - name: Move Cesium assets out of the nested base folder
+        run: |
+          NAME="${{ github.event.repository.name }}"
+          if [ -d "dist/$NAME" ]; then cp -r "dist/$NAME/." dist/ && rm -rf "dist/$NAME"; fi
+          test -f dist/cesium/Cesium.js
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
